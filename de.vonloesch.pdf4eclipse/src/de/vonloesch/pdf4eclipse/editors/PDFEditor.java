@@ -124,6 +124,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 
 	private Listener mouseWheelPageListener;
 	private boolean isListeningForMouseWheel;
+	private boolean isListeningForShiftMouseWheel;
 
 	private Cursor cursorHand;
 	private Cursor cursorArrow;
@@ -312,7 +313,21 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 
 			@Override
 			public void mouseScrolled(MouseEvent e) {
-				if((e.stateMask & SWT.CTRL) > 0) {
+				// initially, remove ShiftMouseWheel listener
+				if (isListeningForShiftMouseWheel) {
+					pv.removeListener(SWT.MouseWheel, mouseWheelPageListener);
+					isListeningForShiftMouseWheel = false;
+				}
+
+				// Pseudo continuous view by Shift + MouseWheel
+				if ((e.stateMask & SWT.SHIFT) > 0) {
+					if (!isListeningForMouseWheel && !isListeningForShiftMouseWheel) {
+						pv.addListener(SWT.MouseWheel, mouseWheelPageListener);
+						isListeningForShiftMouseWheel = true;
+					}
+				}
+				// Zoom by Ctrl + MouseWheel
+				else if ((e.stateMask & SWT.CTRL) > 0) {
 					Point o = getOrigin();
 					Point oldSize = pv.getSize();
 					pv.setZoomFactor(Math.max(pv.getZoomFactor() + MOUSE_ZOOMFACTOR*(float)e.count/10, 0));
@@ -321,7 +336,6 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 					setOrigin(mx,my);
 					return;
 				}
-
 			}
 		});
 
@@ -789,3 +803,4 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	}
 
 }
+
