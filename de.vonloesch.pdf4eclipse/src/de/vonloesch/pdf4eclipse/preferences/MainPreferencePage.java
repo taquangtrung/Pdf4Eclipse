@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Boris von Loesch - initial API and implementation
  ******************************************************************************/
@@ -19,10 +19,10 @@ import de.vonloesch.pdf4eclipse.model.PDFFactory;
 
 /**
  * This class represents a preference page that
- * is contributed to the Preferences dialog. By 
+ * is contributed to the Preferences dialog. By
  * subclassing <samp>FieldEditorPreferencePage</samp>, we
  * can use the field support built into JFace that allows
- * us to create a page that is small and knows how to 
+ * us to create a page that is small and knows how to
  * save, restore and apply itself.
  * <p>
  * This page is used to modify preferences only. They
@@ -40,7 +40,7 @@ public class MainPreferencePage
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription(Messages.MainPreferencePage_Summary);
 	}
-	
+
 	/**
 	 * Creates the field editors. Field editors are abstractions of
 	 * the common GUI blocks needed to manipulate various types
@@ -53,10 +53,15 @@ public class MainPreferencePage
 				PreferenceConstants.PSEUDO_CONTINUOUS_SCROLLING,
 				Messages.MainPreferencePage_PseudoContScroll,
 				getFieldEditorParent()));
-		addField(new RadioGroupFieldEditor(PreferenceConstants.PDF_RENDERER, Messages.MainPreferencePage_pdfRenderer, 1, 
+		addField(
+			new BooleanFieldEditor(
+				PreferenceConstants.AUTOBUILD_SEARCH_FORWARD,
+				Messages.MainPreferencePage_AutoBuildWhenSearchForward,
+				getFieldEditorParent()));
+		addField(new RadioGroupFieldEditor(PreferenceConstants.PDF_RENDERER, Messages.MainPreferencePage_pdfRenderer, 1,
 				new String[][]{{Messages.MainPreferencePage_sunRenderer, ""+PDFFactory.STRATEGY_SUN},  //$NON-NLS-2$
 				{Messages.MainPreferencePage_jpedalRenderer, ""+PDFFactory.STRATEGY_JPEDAL},  //$NON-NLS-2$
-				{Messages.MainPreferencePage_adaptive, 
+				{Messages.MainPreferencePage_adaptive,
 					""+PDFFactory.STRATEGY_SUN_JPEDAL}} //$NON-NLS-1$
 				, getFieldEditorParent(), true));
 	}
@@ -66,5 +71,5 @@ public class MainPreferencePage
 	 */
 	public void init(IWorkbench workbench) {
 	}
-	
+
 }

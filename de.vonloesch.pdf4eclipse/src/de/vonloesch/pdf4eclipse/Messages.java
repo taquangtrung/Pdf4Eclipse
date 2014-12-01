@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Boris von Loesch - initial API and implementation
  ******************************************************************************/
@@ -18,6 +18,7 @@ public class Messages extends NLS {
 	public static String MainPreferencePage_jpedalRenderer;
 	public static String MainPreferencePage_pdfRenderer;
 	public static String MainPreferencePage_PseudoContScroll;
+	public static String MainPreferencePage_AutoBuildWhenSearchForward;
 	public static String MainPreferencePage_Summary;
 	public static String MainPreferencePage_sunRenderer;
 	public static String PDFEditor_ErrorMsg1;

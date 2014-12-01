@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Boris von Loesch - initial API and implementation
  *     MeisterYeti - pseudo-continuous scrolling and zooming by mouse wheel
@@ -91,11 +91,11 @@ import de.vonloesch.pdf4eclipse.preferences.PreferenceConstants;
 import de.vonloesch.synctex.SimpleSynctexParser;
 
 /**
- * 
+ *
  * @author Boris von Loesch
  *
  */
-public class PDFEditor extends EditorPart implements IResourceChangeListener, 
+public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	INavigationLocationProvider, IPageChangeListener, IPreferenceChangeListener{
 
 	public static final String ID = "de.vonloesch.pdf4eclipse.editors.PDFEditor"; //$NON-NLS-1$
@@ -106,13 +106,13 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	public static final int FORWARD_SEARCH_FILE_NOT_FOUND = -2;
 	public static final int FORWARD_SEARCH_POS_NOT_FOUND = -3;
 	public static final int FORWARD_SEARCH_UNKNOWN_ERROR = -4;
-	
+
 	private static final float MOUSE_ZOOMFACTOR = 0.2f;
-	
+
 	private static final int SCROLLING_WAIT_TIME = 200;
 
 	static final String PDFPOSITION_ID = "PDFPosition"; //$NON-NLS-1$
-	
+
 	public PDFPageViewer pv;
 	private File file;
 
@@ -121,13 +121,13 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	int currentPage;
 	private PDFFileOutline outline;
 	private StatusLinePageSelector position;
-	
+
 	private Listener mouseWheelPageListener;
 	private boolean isListeningForMouseWheel;
 
 	private Cursor cursorHand;
 	private Cursor cursorArrow;
-	
+
 	public PDFEditor() {
 		super();
 	}
@@ -135,24 +135,24 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		if (sc != null) sc.dispose();
 		if (pv != null) pv.dispose();
 		if (outline != null) outline.dispose();
 		if (cursorArrow != null) cursorArrow.dispose();
 		if (cursorHand != null) cursorHand.dispose();
-		
+
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
 		if (position != null) position.removePageChangeListener(this);
-		
+
         IEclipsePreferences prefs = (new InstanceScope()).getNode(de.vonloesch.pdf4eclipse.Activator.PLUGIN_ID);
 		prefs.removePreferenceChangeListener(this);
-		
+
 		if (f != null) f.close();
 		f = null;
 		pv = null;
 	}
-	
+
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -169,7 +169,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		showPage(pageNr);
 		setOrigin(sc.getOrigin().x, 0);
 	}
-	
+
 	public void readPdfFile() throws PartInitException{
 		IEditorInput input = getEditorInput();
 		if (input instanceof FileStoreEditorInput) {
@@ -190,7 +190,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 			throw new PartInitException(Messages.PDFEditor_ErrorMsg3, fnfe);
 		} catch (IOException ioe) {
 			throw new PartInitException(Messages.PDFEditor_ErrorMsg4, ioe);
-		} 
+		}
 	}
 
 	@Override
@@ -225,34 +225,34 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 					//readPdfFile();
 					f.reload();
 					final IOutlineNode n = f.getOutline();
-					Display.getDefault().asyncExec(new Runnable() {										
+					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							if (pv != null && !pv.isDisposed()) {
 								showPage(currentPage);
-								if (outline != null) outline.setInput(n);		
+								if (outline != null) outline.setInput(n);
 								pv.redraw();
 							}
 						}
 					});
 				}
-			} 
+			}
 			/*catch (PartInitException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/ 
+			}*/
 			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}				
+		}
 	}
 
 	@Override
 	public void createPartControl(final Composite parent) {
 		cursorHand = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 		cursorArrow = new Cursor(Display.getDefault(), SWT.CURSOR_ARROW);
-		
+
 		parent.setLayout(new FillLayout());
 		sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		pv = new PDFPageViewer(sc, this);
@@ -261,18 +261,18 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		// Speed up scrolling when using a wheel mouse
 		ScrollBar vBar = sc.getVerticalBar();
 		vBar.setIncrement(10);
-				
-		
+
+
 		isListeningForMouseWheel = false;
 		mouseWheelPageListener = new Listener() {
-			
+
 			//last time the page number changed due to a scrolling event
 			long lastTime;
-			
+
 			@Override
 			public void handleEvent(Event e) {
 				long time = e.time & 0xFFFFFFFFL;
-				
+
 				//If a scrolling event occurs within a very short period of time
 				//after the last page change discard it. This avoids "overscrolling"
 				//the beginning of the next page
@@ -280,9 +280,9 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 					e.doit = false;
 					return;
 				}
-				
+
 				Point p = sc.getOrigin();
-				
+
 				int height = sc.getClientArea().height;
 				int pheight = sc.getContent().getBounds().height;
 
@@ -303,10 +303,10 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 						lastTime = time;
 					}
 				}
-				
+
 			}
 		};
-		
+
 		//Add zooming by using mouse wheel and ctrl key (contributed by MeisterYeti)
 		pv.addMouseWheelListener(new MouseWheelListener() {
 
@@ -321,16 +321,16 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 					setOrigin(mx,my);
 					return;
 				}
-				
+
 			}
 		});
-		
+
 		//Add panning of page using middle mouse button (contributed by MeisterYeti)
 		pv.addMouseListener(new MouseListener() {
-			
+
 			Point start;
 			MouseMoveListener mml = new MouseMoveListener() {
-				
+
 				@Override
 				public void mouseMove(MouseEvent e) {
 					if((e.stateMask & SWT.BUTTON2) == 0) {
@@ -342,7 +342,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 					sc.setOrigin(o.x-(e.x-start.x), o.y-(e.y-start.y));
 				}
 			};
-			
+
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if(e.button != 2)
@@ -350,7 +350,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 				pv.removeMouseMoveListener(mml);
 				pv.setCursor(cursorArrow);
 			}
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if(e.button != 2)
@@ -359,10 +359,10 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 				pv.addMouseMoveListener(mml);
 				pv.setCursor(cursorHand);
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {}
-		});		
+		});
 
 		pv.addKeyListener(new KeyAdapter() {
 
@@ -402,19 +402,19 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 							showPage(currentPage - 1);
 							setOrigin(sc.getOrigin().x, pheight);
 						}
-					}					
+					}
 				}
 				else if (e.keyCode == SWT.ARROW_DOWN) {
 					if (p.y < pheight - height) {
 						sc.setOrigin(sc.getOrigin().x, p.y + lInc);
-					}					
+					}
 				}
 				else if (e.keyCode == SWT.ARROW_UP) {
 					if (p.y > 0) {
 						int y = p.y - lInc;
 						if (y < 0) y = 0;
 						sc.setOrigin(sc.getOrigin().x, y);
-					}					
+					}
 				}
 				else if (e.keyCode == SWT.ARROW_RIGHT) {
 					if (p.x < sc.getContent().getBounds().width - sc.getClientArea().width) {
@@ -426,7 +426,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 						int x = p.x - hInc;
 						if (x < 0) x = 0;
 						sc.setOrigin(x, sc.getOrigin().y);
-					}					
+					}
 				}
 				else if (e.keyCode == SWT.HOME) {
 					showPage(1);
@@ -435,7 +435,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 				else if (e.keyCode == SWT.END) {
 					showPage(f.getNumPages());
 					setOrigin(sc.getOrigin().x, pheight);
-				}	
+				}
 
 			}
 		});
@@ -460,11 +460,11 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		if (f != null) {
 			showPage(currentPage);
 		}
-		
+
         IEclipsePreferences prefs = (new InstanceScope()).getNode(de.vonloesch.pdf4eclipse.Activator.PLUGIN_ID);
-        
+
 		prefs.addPreferenceChangeListener(this);
-		
+
 		if (prefs.getBoolean(PreferenceConstants.PSEUDO_CONTINUOUS_SCROLLING, true)) {
 			pv.addListener(SWT.MouseWheel, mouseWheelPageListener);
 			isListeningForMouseWheel = true;
@@ -477,11 +477,11 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
     public void preferenceChange(PreferenceChangeEvent event) {
     	//Check whether "Pseudo continuous scrolling" was changed
     	if (PreferenceConstants.PSEUDO_CONTINUOUS_SCROLLING.equals(event.getKey())) {
-    		
+
     		boolean newValue = Boolean.parseBoolean((String)(event.getNewValue()));
     		//I do not know why this happens, but getNewValue() returns null instead of true
     		if (event.getNewValue() == null) newValue = true;
-    		
+
     		if (isListeningForMouseWheel && newValue == false) {
     			pv.removeListener(SWT.MouseWheel, mouseWheelPageListener);
     			isListeningForMouseWheel = false;
@@ -511,7 +511,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 				}
 			}
 		});
-	}	
+	}
 
 	private File getSyncTeXFile() {
 		String name = file.getAbsolutePath();
@@ -522,8 +522,8 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		if (f.exists()) return f;
 		return null;
 	}
-	
-	private SimpleSynctexParser createSimpleSynctexParser(File f) 
+
+	private SimpleSynctexParser createSimpleSynctexParser(File f)
 		throws IOException {
 		InputStream in;
 		if (f.getName().toLowerCase().endsWith(".gz")) {
@@ -539,10 +539,10 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 	/**
 	 * Starts a forward search in the current pdf-editor. The editor
 	 * searches for the SyncTeX file and displays the position given by the user.
-	 * 
-	 * @param file The TeX file 
+	 *
+	 * @param file The TeX file
 	 * @param lineNr The line number in the TeX file
-	 * @return One of {@link FORWARD_SEARCH_OK}, 
+	 * @return One of {@link FORWARD_SEARCH_OK},
 	 * 		{@link FORWARD_SEARCH_NO_SYNCTEX}, {@link FORWARD_SEARCH_FILE_NOT_FOUND},
 	 * 		{@link FORWARD_SEARCH_POS_NOT_FOUND}, {@link FORWARD_SEARCH_UNKNOWN_ERROR}
 	 */
@@ -556,7 +556,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 			p.setForwardSearchInformation(file, lineNr);
 			p.startForward();
 			p.close();
-			
+
 			double[] result = p.getForwardSearchResult();
 			if (result == null) return FORWARD_SEARCH_FILE_NOT_FOUND;
 
@@ -564,8 +564,8 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 			if (page > f.getNumPages() || page < 1) return FORWARD_SEARCH_UNKNOWN_ERROR;
 			showPage(page);
 			pv.highlight(result[1], result[2], result[3], result[4]);
-			Rectangle2D re = pv.convertPDF2ImageCoord(new Rectangle((int)Math.round(result[1]), 
-					(int)Math.round(pv.currentPage.getHeight() - result[2]), 
+			Rectangle2D re = pv.convertPDF2ImageCoord(new Rectangle((int)Math.round(result[1]),
+					(int)Math.round(pv.currentPage.getHeight() - result[2]),
 					1, 1));
 			int x = sc.getOrigin().x;
 			if (re.getX() < sc.getOrigin().x) x = (int)Math.round(re.getX() - 10);
@@ -646,7 +646,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		pv.showPage(page);
 		updateStatusLine();
 	}
-	
+
 	public void showPage(int pageNr) {
 		if (pageNr < 1) pageNr = 1;
 		if (pageNr > f.getNumPages()) pageNr = f.getNumPages();
@@ -684,10 +684,10 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 				setOrigin(x, (int)Math.round(re.getY() - sc.getBounds().height / 4.));
 			}
 			else {
-				setOrigin(sc.getOrigin().x, 0);			
+				setOrigin(sc.getOrigin().x, 0);
 			}
 			wpage.getNavigationHistory().markLocation(this);
-		} 
+		}
 		else if (dest.getType() == IPDFDestination.TYPE_URL) {
 			String url = dest.getURL();
 			if (url.toLowerCase().indexOf("://") < 0) { //$NON-NLS-1$

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Boris von Loesch - initial API and implementation
  ******************************************************************************/
@@ -15,6 +15,7 @@ package de.vonloesch.pdf4eclipse.preferences;
  */
 public class PreferenceConstants {
 
-	public static final String PSEUDO_CONTINUOUS_SCROLLING = "pseudoContinuousScrolling";	
+	public static final String PSEUDO_CONTINUOUS_SCROLLING = "pseudoContinuousScrolling";
+	public static final String AUTOBUILD_SEARCH_FORWARD= "autoBuildSearchForward";
 	public static final String PDF_RENDERER = "pdfRenderer";
 }
