@@ -378,81 +378,81 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 			public void mouseDoubleClick(MouseEvent e) {}
 		});
 
-		pv.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				int height = sc.getClientArea().height;
-				int pInc = 3* height / 4;
-				int lInc = height / 20;
-				int hInc = sc.getClientArea().width / 20;
-				int pheight = sc.getContent().getBounds().height;
-				Point p = sc.getOrigin();
-				if (e.keyCode == SWT.PAGE_DOWN) {
-					if (p.y < pheight - height) {
-						int y = p.y + pInc;
-						if (y > pheight - height) {
-							y = pheight - height;
-						}
-						sc.setOrigin(sc.getOrigin().x, y);
-					}
-					else {
-						//We are at the end of the page
-						if (currentPage < f.getNumPages()) {
-							showPage(currentPage + 1);
-							setOrigin(sc.getOrigin().x, 0);
-						}
-					}
-				}
-				else if (e.keyCode == SWT.PAGE_UP) {
-					if (p.y > 0) {
-						int y = p.y - pInc;
-						if (y < 0) y = 0;
-						sc.setOrigin(sc.getOrigin().x, y);
-					}
-					else {
-						//We are at the top of the page
-						if (currentPage > 1) {
-							showPage(currentPage - 1);
-							setOrigin(sc.getOrigin().x, pheight);
-						}
-					}
-				}
-				else if (e.keyCode == SWT.ARROW_DOWN) {
-					if (p.y < pheight - height) {
-						sc.setOrigin(sc.getOrigin().x, p.y + lInc);
-					}
-				}
-				else if (e.keyCode == SWT.ARROW_UP) {
-					if (p.y > 0) {
-						int y = p.y - lInc;
-						if (y < 0) y = 0;
-						sc.setOrigin(sc.getOrigin().x, y);
-					}
-				}
-				else if (e.keyCode == SWT.ARROW_RIGHT) {
-					if (p.x < sc.getContent().getBounds().width - sc.getClientArea().width) {
-						sc.setOrigin(p.x + hInc, sc.getOrigin().y);
-					}
-				}
-				else if (e.keyCode == SWT.ARROW_LEFT) {
-					if (p.x > 0) {
-						int x = p.x - hInc;
-						if (x < 0) x = 0;
-						sc.setOrigin(x, sc.getOrigin().y);
-					}
-				}
-				else if (e.keyCode == SWT.HOME) {
-					showPage(1);
-					setOrigin(sc.getOrigin().x, 0);
-				}
-				else if (e.keyCode == SWT.END) {
-					showPage(f.getNumPages());
-					setOrigin(sc.getOrigin().x, pheight);
-				}
-
-			}
-		});
+//		pv.addKeyListener(new KeyAdapter() {
+//
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				int height = sc.getClientArea().height;
+//				int pInc = 3* height / 4;
+//				int lInc = height / 20;
+//				int hInc = sc.getClientArea().width / 20;
+//				int pheight = sc.getContent().getBounds().height;
+//				Point p = sc.getOrigin();
+//				if (e.keyCode == SWT.PAGE_DOWN) {
+//					if (p.y < pheight - height) {
+//						int y = p.y + pInc;
+//						if (y > pheight - height) {
+//							y = pheight - height;
+//						}
+//						sc.setOrigin(sc.getOrigin().x, y);
+//					}
+//					else {
+//						//We are at the end of the page
+//						if (currentPage < f.getNumPages()) {
+//							showPage(currentPage + 1);
+//							setOrigin(sc.getOrigin().x, 0);
+//						}
+//					}
+//				}
+//				else if (e.keyCode == SWT.PAGE_UP) {
+//					if (p.y > 0) {
+//						int y = p.y - pInc;
+//						if (y < 0) y = 0;
+//						sc.setOrigin(sc.getOrigin().x, y);
+//					}
+//					else {
+//						//We are at the top of the page
+//						if (currentPage > 1) {
+//							showPage(currentPage - 1);
+//							setOrigin(sc.getOrigin().x, pheight);
+//						}
+//					}
+//				}
+//				else if (e.keyCode == SWT.ARROW_DOWN) {
+//					if (p.y < pheight - height) {
+//						sc.setOrigin(sc.getOrigin().x, p.y + lInc);
+//					}
+//				}
+//				else if (e.keyCode == SWT.ARROW_UP) {
+//					if (p.y > 0) {
+//						int y = p.y - lInc;
+//						if (y < 0) y = 0;
+//						sc.setOrigin(sc.getOrigin().x, y);
+//					}
+//				}
+//				else if (e.keyCode == SWT.ARROW_RIGHT) {
+//					if (p.x < sc.getContent().getBounds().width - sc.getClientArea().width) {
+//						sc.setOrigin(p.x + hInc, sc.getOrigin().y);
+//					}
+//				}
+//				else if (e.keyCode == SWT.ARROW_LEFT) {
+//					if (p.x > 0) {
+//						int x = p.x - hInc;
+//						if (x < 0) x = 0;
+//						sc.setOrigin(x, sc.getOrigin().y);
+//					}
+//				}
+//				else if (e.keyCode == SWT.HOME) {
+//					showPage(1);
+//					setOrigin(sc.getOrigin().x, 0);
+//				}
+//				else if (e.keyCode == SWT.END) {
+//					showPage(f.getNumPages());
+//					setOrigin(sc.getOrigin().x, pheight);
+//				}
+//
+//			}
+//		});
 
 		IStatusLineManager statusLineM = getEditorSite().getActionBars().getStatusLineManager();
 		IContributionItem[] items = statusLineM.getItems();
@@ -526,7 +526,7 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 			}
 		});
 	}
-
+	
 	private File getSyncTeXFile() {
 		String name = file.getAbsolutePath();
 		name = name.substring(0, name.lastIndexOf('.'));
@@ -548,6 +548,117 @@ public class PDFEditor extends EditorPart implements IResourceChangeListener,
 		}
 		BufferedReader r = new BufferedReader(new InputStreamReader(in));
 		return new SimpleSynctexParser(r);
+	}
+	
+	public void gotoNextPage() {
+		int height = sc.getClientArea().height;
+		int pInc = 3* height / 4;
+		int pheight = sc.getContent().getBounds().height;
+		Point p = sc.getOrigin();
+
+		if (p.y < pheight - height) {
+			int y = p.y + pInc;
+			if (y > pheight - height) {
+				y = pheight - height;
+			}
+			sc.setOrigin(sc.getOrigin().x, y);
+		}
+		else {
+			//We are at the end of the page
+			if (currentPage < f.getNumPages()) {
+				showPage(currentPage + 1);
+				setOrigin(sc.getOrigin().x, 0);
+			}
+		}
+	}
+	
+	public void gotoPrevPage() {
+		int height = sc.getClientArea().height;
+		int pInc = 3* height / 4;
+		int pheight = sc.getContent().getBounds().height;
+		Point p = sc.getOrigin();
+		
+		if (p.y > 0) {
+			int y = p.y - pInc;
+			if (y < 0) y = 0;
+			sc.setOrigin(sc.getOrigin().x, y);
+		}
+		else {
+			//We are at the top of the page
+			if (currentPage > 1) {
+				showPage(currentPage - 1);
+				setOrigin(sc.getOrigin().x, pheight);
+			}
+		}
+	}
+	
+	public void scrollCurrentPageDown () {
+		int height = sc.getClientArea().height;
+		int lInc = height / 20;
+		int pheight = sc.getContent().getBounds().height;
+		Point p = sc.getOrigin();
+		
+		if (p.y < pheight - height) {
+			sc.setOrigin(sc.getOrigin().x, p.y + lInc);
+		}
+	}
+	
+	public void scrollCurrentPageUp () {
+		int height = sc.getClientArea().height;
+		int lInc = height / 20;
+		Point p = sc.getOrigin();
+		
+		if (p.y > 0) {
+			int y = p.y - lInc;
+			if (y < 0) y = 0;
+			sc.setOrigin(sc.getOrigin().x, y);
+		}
+	}
+
+	public void scrollCurrentPageRight () {
+		int hInc = sc.getClientArea().width / 20;
+		Point p = sc.getOrigin();
+		
+		if (p.y > 0) {
+			if (p.x < sc.getContent().getBounds().width - sc.getClientArea().width) {
+				sc.setOrigin(p.x + hInc, sc.getOrigin().y);
+			}
+		}
+	}
+	
+	public void scrollCurrentPageLeft () {
+		int hInc = sc.getClientArea().width / 20;
+		Point p = sc.getOrigin();
+		
+		if (p.x > 0) {
+			int x = p.x - hInc;
+			if (x < 0) x = 0;
+			sc.setOrigin(x, sc.getOrigin().y);
+		}
+	}
+	
+	public void gotoFirstPage () {
+		showPage(1);
+		setOrigin(sc.getOrigin().x, 0);
+	}
+
+	public void gotoLastPage () {
+		int pheight = sc.getContent().getBounds().height;
+		
+		showPage(f.getNumPages());
+		setOrigin(sc.getOrigin().x, pheight);
+	}
+	
+	public void scrollDown() {
+		int height = sc.getClientArea().height;
+		int lInc = height / 20;
+		Point p = sc.getOrigin();
+
+		if (p.y > 0) {
+			int y = p.y - lInc;
+			if (y < 0) y = 0;
+			sc.setOrigin(sc.getOrigin().x, y);
+		}
 	}
 
 	/**

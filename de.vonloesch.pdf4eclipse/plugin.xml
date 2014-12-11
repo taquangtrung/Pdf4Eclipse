@@ -60,6 +60,70 @@
             id="de.vonloesch.pdf4Eclipse.category"
             name="Pdf4Eclipse">
       </category>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.GotoNextPageHandler"
+            description="Go to Next Page"
+            helpContextId="de.vonloesch.pdf4eclipse.gotoNextPage"
+            id="PDFViewer.command.gotoNextPage"
+            name="Go to Next Page">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.GotoPrevPageHandler"
+            description="Go to Previous Page"
+            helpContextId="de.vonloesch.pdf4eclipse.gotoPrevPage"
+            id="PDFViewer.command.gotoPrevPage"
+            name="Go to Previous Page">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.GotoFirstPageHandler"
+            description="Go to First Page"
+            helpContextId="de.vonloesch.pdf4eclipse.gotoFirstPage"
+            id="PDFViewer.command.gotoFirstPage"
+            name="Go to First Page">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.GotoLastPageHandler"
+            description="Go to Last Page"
+            helpContextId="de.vonloesch.pdf4eclipse.gotoLastPage"
+            id="PDFViewer.command.gotoLastPage"
+            name="Go to Last Page">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.ScrollCurrentPageUpHandler"
+            description="Scroll Current Page Up"
+            helpContextId="de.vonloesch.pdf4eclipse.scrollCurrentPageUp"
+            id="PDFViewer.command.scrollCurrentPageUp"
+            name="Scroll Current Page Up">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.ScrollCurrentPageDownHandler"
+            description="Scroll Current Page Down"
+            helpContextId="de.vonloesch.pdf4eclipse.scrollCurrentPageDown"
+            id="PDFViewer.command.scrollCurrentPageDown"
+            name="Scroll Current Page Down">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.ScrollCurrentPageLeftHandler"
+            description="Scroll Current Page Left"
+            helpContextId="de.vonloesch.pdf4eclipse.scrollCurrentPageLeft"
+            id="PDFViewer.command.scrollCurrentPageLeft"
+            name="Scroll Current Page Left">
+      </command>
+      <command
+            categoryId="de.vonloesch.pdf4Eclipse.category"
+            defaultHandler="de.vonloesch.pdf4eclipse.editors.handlers.ScrollCurrentPageRightHandler"
+            description="Scroll Current Page Right"
+            helpContextId="de.vonloesch.pdf4eclipse.scrollCurrentPageRight"
+            id="PDFViewer.command.scrollCurrentPageRight"
+            name="Scroll Current Page Right">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -88,6 +152,54 @@
                id="PDFViewer.command.parameter.zoom"
                value="-0.1">
          </parameter>
+      </key>
+      <key
+            commandId="PDFViewer.command.gotoNextPage"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="PAGE_DOWN">
+      </key>
+      <key
+            commandId="PDFViewer.command.gotoPrevPage"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="PAGE_UP">
+      </key>
+      <key
+            commandId="PDFViewer.command.gotoFirstPage"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="HOME">
+      </key>
+      <key
+            commandId="PDFViewer.command.gotoLastPage"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="END">
+      </key>
+      <key
+            commandId="PDFViewer.command.scrollCurrentPageUp"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ARROW_UP">
+      </key>
+      <key
+            commandId="PDFViewer.command.scrollCurrentPageDown"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ARROW_DOWN">
+      </key>
+      <key
+            commandId="PDFViewer.command.scrollCurrentPageLeft"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ARROW_LEFT">
+      </key>
+      <key
+            commandId="PDFViewer.command.scrollCurrentPageRight"
+            contextId="PDFViewer.editors.contextid"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ARROW_RIGHT">
       </key>
    </extension>
    <extension
