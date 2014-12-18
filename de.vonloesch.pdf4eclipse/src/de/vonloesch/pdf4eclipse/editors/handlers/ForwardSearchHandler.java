@@ -166,6 +166,20 @@ public class ForwardSearchHandler extends AbstractHandler {
 						int returnCode = pdfeditor.forwardSearch(fileName, lineNr);
 						if (returnCode == PDFEditor.FORWARD_SEARCH_OK)
 							return;
+						if (returnCode == PDFEditor.FORWARD_SEARCH_POS_NOT_FOUND) {
+							pdfeditor.setFocus();
+							MessageDialog.openInformation(editorPart.getEditorSite().getShell(),
+									"Forward search failed 1",
+									"The position could not be found in any currently open pdf files.");
+							return;
+						}
+						if (returnCode == PDFEditor.FORWARD_SEARCH_UNKNOWN_ERROR) {
+							pdfeditor.setFocus();
+							MessageDialog.openInformation(editorPart.getEditorSite().getShell(),
+									"Forward search failed 1",
+									"The position could not be found in any currently open pdf files.");
+							return;
+						}
 					}
 				}
 			}
