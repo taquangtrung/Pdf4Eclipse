@@ -28,8 +28,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -42,7 +44,7 @@ public class StatusLinePageSelector extends ContributionItem {
 	
 	private int charWidth;
 
-	private Text pageField;
+//	private Text pageField;
 	private Label pageNrField;
 
 	private Image imageFirst, imagePrev, imageNext, imageLast;
@@ -105,14 +107,21 @@ public class StatusLinePageSelector extends ContributionItem {
 	protected void firePageNrChangeListener() {
 		if (listeners == null) return;
 		for (IPageChangeListener l : listeners) {
-			l.pageChange(Integer.parseInt(pageField.getText()));
+//			l.pageChange(Integer.parseInt(pageField.getText()));
+			int separatorIndex = pageNrField.getText().indexOf('/');
+			String pageNumber = pageNrField.getText().substring(0,separatorIndex);
+			l.pageChange(Integer.parseInt(pageNumber));
 		}
 	}
 
 	private boolean checkPage() {
-		String st = pageField.getText();
+//		String st = pageField.getText();
 		try {
-			int i = Integer.parseInt(st);
+//			int i = Integer.parseInt(st);
+//			if (i < 1 || i > this.lastPageNr) return false;
+			int separatorIndex = pageNrField.getText().indexOf('/');
+			String pageNumber = pageNrField.getText().substring(0,separatorIndex);
+			int i = Integer.parseInt(pageNumber);
 			if (i < 1 || i > this.lastPageNr) return false;
 			return true;
 		}
@@ -127,10 +136,11 @@ public class StatusLinePageSelector extends ContributionItem {
 		Label sep = new Label(parent, SWT.SEPARATOR);
 		Composite c = new Composite(parent, SWT.NO_FOCUS);
 		c.setLayout(new GridLayout(4, false));
-		
-		ToolBar bar1 = new ToolBar(c, SWT.FLAT);
+		GridData gd = new GridData();
 
-		firstPage = new ToolItem(bar1, SWT.FLAT);
+		
+		ToolBar bar1 = new ToolBar(c, SWT.FLAT | SWT.CENTER);
+		firstPage = new ToolItem(bar1, SWT.FLAT | SWT.CENTER);
 		imageFirst = Activator.getImageDescriptor("icons/arrow-stop-180.png").createImage(); //$NON-NLS-1$
 		firstPage.setImage(imageFirst);
 		firstPage.setToolTipText(Messages.StatusLinePageSelector_ButtonFirst);
@@ -138,7 +148,8 @@ public class StatusLinePageSelector extends ContributionItem {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				pageField.setText("1"); //$NON-NLS-1$
+//				pageField.setText("1"); //$NON-NLS-1$
+				pageNrField.setText("1/"+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -146,7 +157,7 @@ public class StatusLinePageSelector extends ContributionItem {
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 
-		prevPage = new ToolItem(bar1, SWT.FLAT);
+		prevPage = new ToolItem(bar1, SWT.FLAT | SWT.CENTER);
 		imagePrev = Activator.getImageDescriptor("icons/arrow-180.png").createImage(); //$NON-NLS-1$
 		prevPage.setImage(imagePrev);
 		prevPage.setToolTipText(Messages.StatusLinePageSelector_ButtonPrevious);
@@ -154,7 +165,8 @@ public class StatusLinePageSelector extends ContributionItem {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				pageField.setText("" + (page-1)); //$NON-NLS-1$
+//				pageField.setText("" + (page-1)); //$NON-NLS-1$
+				pageNrField.setText((page-1)+"/"+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -167,23 +179,24 @@ public class StatusLinePageSelector extends ContributionItem {
 			firstPage.setEnabled(false);
 		}
 		
-		pageField = new Text(c, SWT.SINGLE | SWT.RIGHT | SWT.BORDER);
-		pageField.setToolTipText(Messages.StatusLinePageSelector_tooltip);
-		pageField.setTextLimit((""+this.lastPageNr).length()); //$NON-NLS-1$
+//		pageField = new Text(c, SWT.SINGLE | SWT.RIGHT | SWT.BORDER);
+//		pageField.setToolTipText(Messages.StatusLinePageSelector_tooltip);
+//		pageField.setTextLimit((""+this.lastPageNr).length()); //$NON-NLS-1$
 		
-		pageNrField = new Label(c, SWT.SHADOW_NONE);
-		pageNrField.setText(" / "+this.lastPageNr); //$NON-NLS-1$
+		pageNrField = new Label(c, SWT.SHADOW_NONE | SWT.CENTER);
+		pageNrField.setText(this.page+"/"+this.lastPageNr); //$NON-NLS-1$
 		
-		ToolBar bar2 = new ToolBar(c, SWT.FLAT);
+		ToolBar bar2 = new ToolBar(c, SWT.FLAT | SWT.CENTER);
 		imageNext = Activator.getImageDescriptor("icons/arrow.png").createImage(); //$NON-NLS-1$
-		nextPage = new ToolItem(bar2, SWT.FLAT);
+		nextPage = new ToolItem(bar2, SWT.FLAT | SWT.CENTER);
 		nextPage.setImage(imageNext);
 		nextPage.setToolTipText(Messages.StatusLinePageSelector_ButtonNext);
 		nextPage.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				pageField.setText("" + (page+1)); //$NON-NLS-1$
+//				pageField.setText("" + (page+1)); //$NON-NLS-1$
+				pageNrField.setText((page+1)+"/"+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -192,14 +205,15 @@ public class StatusLinePageSelector extends ContributionItem {
 		});
 		
 		imageLast = Activator.getImageDescriptor("icons/arrow-stop.png").createImage(); //$NON-NLS-1$
-		lastPage = new ToolItem(bar2, SWT.FLAT);
+		lastPage = new ToolItem(bar2, SWT.FLAT | SWT.CENTER);
 		lastPage.setImage(imageLast);
 		lastPage.setToolTipText(Messages.StatusLinePageSelector_ButtonLast);
 		lastPage.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				pageField.setText(""+lastPageNr); //$NON-NLS-1$
+//				pageField.setText(""+lastPageNr); //$NON-NLS-1$
+				pageNrField.setText(lastPageNr+"/"+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -212,39 +226,39 @@ public class StatusLinePageSelector extends ContributionItem {
 			nextPage.setEnabled(false);
 		}
 		
-		pageField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 127
-						|| (e.character >= '0' && e.character <= '9')) {
-					return;
-				}
-				else if (e.keyCode == SWT.PAGE_UP && page > 1) {
-					pageField.setText("" + (page-1)); //$NON-NLS-1$
-					firePageNrChangeListener();
-				}
-				else if (e.keyCode == SWT.PAGE_DOWN && page < lastPageNr) {
-					pageField.setText("" + (page+1)); //$NON-NLS-1$
-					firePageNrChangeListener();
-				}
-				
-				if (e.character == 0) return;
-				e.doit = false;
-			}
-			
-			public void keyReleased(org.eclipse.swt.events.KeyEvent e) {
-				if(e.keyCode == 13) {
-					if (!checkPage()) {
-						MessageDialog.openError(statusLine.getShell(), Messages.StatusLinePageSelector_errorMsg1, 
-								Messages.StatusLinePageSelector_errorMsg2
-								+lastPageNr);
-						e.doit = false;
-						return;
-					}
-					firePageNrChangeListener();
-				}
-			}
-		});
+//		pageField.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				if (e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 127
+//						|| (e.character >= '0' && e.character <= '9')) {
+//					return;
+//				}
+//				else if (e.keyCode == SWT.PAGE_UP && page > 1) {
+//					pageField.setText("" + (page-1)); //$NON-NLS-1$
+//					firePageNrChangeListener();
+//				}
+//				else if (e.keyCode == SWT.PAGE_DOWN && page < lastPageNr) {
+//					pageField.setText("" + (page+1)); //$NON-NLS-1$
+//					firePageNrChangeListener();
+//				}
+//				
+//				if (e.character == 0) return;
+//				e.doit = false;
+//			}
+//			
+//			public void keyReleased(org.eclipse.swt.events.KeyEvent e) {
+//				if(e.keyCode == 13) {
+//					if (!checkPage()) {
+//						MessageDialog.openError(statusLine.getShell(), Messages.StatusLinePageSelector_errorMsg1, 
+//								Messages.StatusLinePageSelector_errorMsg2
+//								+lastPageNr);
+//						e.doit = false;
+//						return;
+//					}
+//					firePageNrChangeListener();
+//				}
+//			}
+//		});
 		// Compute the size base on 'charWidth' average char widths
 		GC gc = new GC(statusLine);
 		gc.setFont(statusLine.getFont());
@@ -252,10 +266,10 @@ public class StatusLinePageSelector extends ContributionItem {
 		int widthHint = fm.getAverageCharWidth() * charWidth;
 		int heightHint = fm.getHeight();
 		
-		GridData d = new GridData(fm.getAverageCharWidth()*4 + pageField.getBorderWidth(), 
-				fm.getHeight() + pageField.getBorderWidth());
-		pageField.setLayoutData(d);
-		pageField.setText(""+this.page); //$NON-NLS-1$
+//		GridData d = new GridData(fm.getAverageCharWidth()*4 + pageField.getBorderWidth(), 
+//				fm.getHeight() + pageField.getBorderWidth());
+//		pageField.setLayoutData(d);
+//		pageField.setText(""+this.page); //$NON-NLS-1$
 		gc.dispose();
 
 		StatusLineLayoutData data = new StatusLineLayoutData();
@@ -276,9 +290,9 @@ public class StatusLinePageSelector extends ContributionItem {
 	 *         not yet initialized.
 	 */
 	public Point getDisplayLocation() {
-		if ((pageField != null) && (statusLine != null)) {
-			return statusLine.toDisplay(pageField.getLocation());
-		}
+//		if ((pageField != null) && (statusLine != null)) {
+//			return statusLine.toDisplay(pageField.getLocation());
+//		}
 
 		return null;
 	}
@@ -292,12 +306,12 @@ public class StatusLinePageSelector extends ContributionItem {
 		this.page = page;
 		this.lastPageNr = pageNumbers;
 
-		if (pageField != null && !pageField.isDisposed()) {
-			pageField.setTextLimit((""+this.lastPageNr).length()); //$NON-NLS-1$
-			pageField.setText(""+this.page); //$NON-NLS-1$
-		}
+//		if (pageField != null && !pageField.isDisposed()) {
+//			pageField.setTextLimit((""+this.lastPageNr).length()); //$NON-NLS-1$
+//			pageField.setText(""+this.page); //$NON-NLS-1$
+//		}
 		if (pageNrField != null && !pageNrField.isDisposed()) {
-			pageNrField.setText(" / "+this.lastPageNr); //$NON-NLS-1$
+			pageNrField.setText(this.page+"/"+this.lastPageNr); //$NON-NLS-1$
 			
 			if (page == 1) {
 				prevPage.setEnabled(false);
