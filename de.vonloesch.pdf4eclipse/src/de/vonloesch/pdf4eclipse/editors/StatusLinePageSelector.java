@@ -16,10 +16,15 @@ import java.util.List;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.StatusLineLayoutData;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -30,8 +35,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -119,7 +126,7 @@ public class StatusLinePageSelector extends ContributionItem {
 		try {
 //			int i = Integer.parseInt(st);
 //			if (i < 1 || i > this.lastPageNr) return false;
-			int separatorIndex = pageNrField.getText().indexOf('/');
+			int separatorIndex = pageNrField.getText().indexOf(" / ");
 			String pageNumber = pageNrField.getText().substring(0,separatorIndex);
 			int i = Integer.parseInt(pageNumber);
 			if (i < 1 || i > this.lastPageNr) return false;
@@ -130,7 +137,7 @@ public class StatusLinePageSelector extends ContributionItem {
 		}
 	}
 	
-	public void fill(Composite parent) {
+	public void fill(final Composite parent) {
 		statusLine = parent;
 
 		Label sep = new Label(parent, SWT.SEPARATOR);
@@ -149,7 +156,7 @@ public class StatusLinePageSelector extends ContributionItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 //				pageField.setText("1"); //$NON-NLS-1$
-				pageNrField.setText("1/"+lastPageNr);
+				pageNrField.setText("1 / "+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -166,7 +173,7 @@ public class StatusLinePageSelector extends ContributionItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 //				pageField.setText("" + (page-1)); //$NON-NLS-1$
-				pageNrField.setText((page-1)+"/"+lastPageNr);
+				pageNrField.setText((page-1)+" / "+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -184,7 +191,37 @@ public class StatusLinePageSelector extends ContributionItem {
 //		pageField.setTextLimit((""+this.lastPageNr).length()); //$NON-NLS-1$
 		
 		pageNrField = new Label(c, SWT.SHADOW_NONE | SWT.CENTER);
-		pageNrField.setText(this.page+"/"+this.lastPageNr); //$NON-NLS-1$
+		pageNrField.setText(this.page+" / "+this.lastPageNr); //$NON-NLS-1$
+		pageNrField.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				int separatorIndex = pageNrField.getText().indexOf(" / ");
+				String currentPage = pageNrField.getText().substring(0,separatorIndex);
+				InputDialog inputDialog=new InputDialog(parent.getShell(),"Go to page", "Enter page number",currentPage,null);
+				if (inputDialog.open() != Window.OK) {
+					return;
+				}
+				String pageNumber = inputDialog.getValue();
+				int pNumber = Integer.parseInt(pageNumber);
+				if (pNumber < 1 || pNumber > lastPageNr) {
+					MessageDialog.openError(parent.getShell(), "Error", 
+							"Page number is out of range: " + pageNumber + " / " + lastPageNr);
+				}
+				else {
+					pageNrField.setText(pageNumber+" / "+lastPageNr);
+					firePageNrChangeListener();
+				}
+			}
+		});
 		
 		ToolBar bar2 = new ToolBar(c, SWT.FLAT | SWT.CENTER);
 		imageNext = Activator.getImageDescriptor("icons/arrow.png").createImage(); //$NON-NLS-1$
@@ -196,7 +233,7 @@ public class StatusLinePageSelector extends ContributionItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 //				pageField.setText("" + (page+1)); //$NON-NLS-1$
-				pageNrField.setText((page+1)+"/"+lastPageNr);
+				pageNrField.setText((page+1)+" / "+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -213,7 +250,7 @@ public class StatusLinePageSelector extends ContributionItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 //				pageField.setText(""+lastPageNr); //$NON-NLS-1$
-				pageNrField.setText(lastPageNr+"/"+lastPageNr);
+				pageNrField.setText(lastPageNr+" / "+lastPageNr);
 				firePageNrChangeListener();
 			}
 			
@@ -311,7 +348,7 @@ public class StatusLinePageSelector extends ContributionItem {
 //			pageField.setText(""+this.page); //$NON-NLS-1$
 //		}
 		if (pageNrField != null && !pageNrField.isDisposed()) {
-			pageNrField.setText(this.page+"/"+this.lastPageNr); //$NON-NLS-1$
+			pageNrField.setText(this.page+" / "+this.lastPageNr); //$NON-NLS-1$
 			
 			if (page == 1) {
 				prevPage.setEnabled(false);
