@@ -115,7 +115,7 @@ public class StatusLinePageSelector extends ContributionItem {
 		if (listeners == null) return;
 		for (IPageChangeListener l : listeners) {
 //			l.pageChange(Integer.parseInt(pageField.getText()));
-			int separatorIndex = pageNrField.getText().indexOf('/');
+			int separatorIndex = pageNrField.getText().indexOf(" / ");
 			String pageNumber = pageNrField.getText().substring(0,separatorIndex);
 			l.pageChange(Integer.parseInt(pageNumber));
 		}
@@ -142,7 +142,7 @@ public class StatusLinePageSelector extends ContributionItem {
 
 		Label sep = new Label(parent, SWT.SEPARATOR);
 		Composite c = new Composite(parent, SWT.NO_FOCUS);
-		c.setLayout(new GridLayout(4, false));
+		c.setLayout(new GridLayout(3, false));
 		GridData gd = new GridData();
 
 		
@@ -307,6 +307,10 @@ public class StatusLinePageSelector extends ContributionItem {
 //				fm.getHeight() + pageField.getBorderWidth());
 //		pageField.setLayoutData(d);
 //		pageField.setText(""+this.page); //$NON-NLS-1$
+		GridData d = new GridData(fm.getAverageCharWidth()*10 + pageNrField.getBorderWidth(), 
+				fm.getHeight() + pageNrField.getBorderWidth());
+		pageNrField.setLayoutData(d);
+		
 		gc.dispose();
 
 		StatusLineLayoutData data = new StatusLineLayoutData();
