@@ -285,7 +285,8 @@ public class SimpleSynctexParser {
 					
 					pageLevel++;
 					//We already have a position, so break it
-					if (pdfPage != 0 && pdfPage < currentPage - 2) return;
+					//Trung: disable it because it leads to inaccurate forward search
+					//if (pdfPage != 0 && pdfPage < currentPage - 2) return;
 					//System.out.println(currentPage);
 				}
 				else if (first == 'I' && line.startsWith("Input")) {
